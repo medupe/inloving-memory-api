@@ -18,13 +18,14 @@ current_time = datetime.utcnow()
 # Add 15 minutes
 future_time = current_time + timedelta(minutes=15)
 class OtpService:
-    async def sendOtp(self,name, email ,subject,db:db_dependency ):
+    async def sendOtp(self,name, email ,subject,db:db_dependency ,userId):
             otp = random.randint(1000, 9999)
             otp_data = {
                  "otp":str(otp),
-                 "createdAt":datetime.now(),
-                 "expireTime":current_time,
-                 "isVerified":False
+                 "createdAt":current_time,
+                 "expireTime":future_time,
+                 "isVerified":False,
+                 "userId" : userId
             }
            
             with open(file_path, "r", encoding="utf-8") as file:

@@ -42,15 +42,17 @@ async def create_user(user:UserBase,db:db_dependency,otp:otp_dependency):
     hashed_pw = hash_password(user.password) 
     userData= user.model_copy(update={"password": hashed_pw}) # Hash the password
     db_user = models.user_model.UserModel(**userData.dict())
+    user_exist_not_verified =   db.query(UserModel).filter(UserModel.email == user.email,UserModel.isVerified ==False).first()
     if db.query(UserModel).filter(UserModel.email == user.email,UserModel.isVerified ==True).first():
         raise HTTPException(status_code=400, detail="Email already exists")
-    elif  db.query(UserModel).filter(UserModel.email == user.email,UserModel.isVerified ==False).first():
-        db.delete(db_user)
+    elif  user_exist_not_verified:
+        db.delete(user_exist_not_verified)
     
     db.add(db_user)
-    db.commit()
     
-    otpInfo =await  otp.sendOtp(userData.name,userData.email,"OTP sent",db)
+    db.commit()
+    db.refresh(db_user)
+    otpInfo =await  otp.sendOtp(userData.name,userData.email,"OTP sent",db,db_user.id)
     return {"processId" : otpInfo}
 
 @router.post("/login",status_code=status.HTTP_201_CREATED)
@@ -65,18 +67,18 @@ async def login(login:LoginBase,db:db_dependency):
 
     #db.add(db_user.model_copy(update={"password": hashed_pw}))
   #  db.commit()
-@router.post("/confirm-otp",status_code=status.HTTP_201_CREATED)
+@router.post("/confirm-otp-register",status_code=status.HTTP_201_CREATED)
 async def confirmOtp(otpSchema:GetOtpSchema,db:db_dependency):
-        if db.query(OTPModel).filter(OTPModel.expireTime <  datetime.now(),OTPModel.isVerified ==False).first():
+        if db.query(OTPModel).filter(OTPModel.id == otpSchema.processId,    OTPModel.expireTime <  datetime.now(),OTPModel.isVerified ==False).first():
             raise HTTPException(status_code=400, detail="Otp expired")
-        
-        elif  db.query(OTPModel).filter(OTPModel.otp !=  otpSchema.otp,OTPModel.isVerified ==False).first():
+        elif  db.query(OTPModel).filter( OTPModel.id == otpSchema.processId,  OTPModel.otp !=  otpSchema.otp,OTPModel.isVerified ==False).first():
             raise HTTPException(status_code=400, detail="Invalid otp")
-        elif  db.query(OTPModel).filter(OTPModel.otp ==  otpSchema.otp,OTPModel.isVerified ==False).first():
-             otpTable = db.query(UserModel).filter(UserModel.id == GetOtpSchema.processId ).first()
-             otpTable.isVerified = True
+        elif  db.query(OTPModel).filter(OTPModel.id == otpSchema.processId,OTPModel.otp ==  otpSchema.otp,OTPModel.isVerified ==False, ).first():
+             otp =  db.query(OTPModel).filter(OTPModel.id == otpSchema.processId,OTPModel.otp ==  otpSchema.otp,OTPModel.isVerified ==False, ).first()
+             userTable = db.query(UserModel).filter(UserModel.id == otp.userId ).first()
+             otp.isVerified = True
+             userTable.isVerified = True
              db.commit()
-             db.refresh(otpTable)
         else :
             raise HTTPException(status_code=400, detail="Error occured confirming your otp")
 

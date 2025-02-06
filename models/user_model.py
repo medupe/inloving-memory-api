@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text
 class UserModel(Base):
     __tablename__ = "users"
 
-    id = Column(Integer,primary_key=True,nullable=False,)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     name = Column(String,nullable=False)
     surname = Column(String,nullable=False)
     cellNumber = Column(String,nullable=False)

@@ -21,4 +21,5 @@ class OTPModel(Base):
     createdAt = Column(DateTime, nullable=False, default=datetime.utcnow)
     expireTime = Column(DateTime, nullable=False, default=future_time)
     isVerified = Column(Boolean, server_default='False')
+    userId = Column(UUID(as_uuid=True),nullable=False)
     #type = Column(Enum(OtpType), nullable=False)
