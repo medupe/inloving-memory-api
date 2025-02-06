@@ -2,11 +2,11 @@ from datetime import datetime,timedelta
 from typing import Annotated
 from fastapi.params import Depends
 import random
-from ..models.otp_model import OtpType,OTPModel
+from models.otp_model import OtpType,OTPModel
 from .email_service import email_dependency
-from ..schemas.otp_schema import OtpSchema
-from .. import models
-from ..database import db_dependency
+from schemas.otp_schema import OtpSchema
+import models
+from database import db_dependency
 import os
 
 base_dir = os.path.dirname(os.path.abspath(__file__))  # Get current script directory

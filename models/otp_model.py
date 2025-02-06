@@ -1,4 +1,4 @@
-from ..database import Base
+from database import Base
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column,Enum, Integer, String, TIMESTAMP, Boolean, text,DateTime

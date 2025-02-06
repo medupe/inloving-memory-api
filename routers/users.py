@@ -1,14 +1,14 @@
 from fastapi import APIRouter, FastAPI,Depends,HTTPException,status
 from datetime import datetime
-from ..models.otp_model import OtpType,OTPModel
-from ..models.user_model import UserModel
-from .. import models
+from models.otp_model import OtpType,OTPModel
+from models.user_model import UserModel
+import models
 
-from ..schemas.user_schema import UserBase,LoginBase
-from ..schemas.otp_schema import OtpSchema,GetOtpSchema
-from ..database import db_dependency
-from ..utils.email_service import email_dependency
-from ..utils.otp_service import otp_dependency
+from schemas.user_schema import UserBase,LoginBase
+from schemas.otp_schema import OtpSchema,GetOtpSchema
+from database import db_dependency
+from utils.email_service import email_dependency
+from utils.otp_service import otp_dependency
 from passlib.context import CryptContext
 
 router = APIRouter()
