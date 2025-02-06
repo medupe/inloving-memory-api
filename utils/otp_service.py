@@ -34,7 +34,7 @@ class OtpService:
             db.add(db_otp)
             db.commit()
             db.refresh(db_otp)
-            #await email_dependency.sendEmail(self,name,email,subject,html_content)
+            await email_dependency.sendEmail(self,name,email,subject,html_content)
             return db_otp.id
 def get_otp_service():
     return OtpService()
