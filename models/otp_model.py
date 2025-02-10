@@ -18,8 +18,8 @@ class OTPModel(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     otp = Column(String,nullable=False)
-    createdAt = Column(DateTime, nullable=False, default=datetime.utcnow)
-    expireTime = Column(DateTime, nullable=False, default=future_time)
+    createdAt = Column(DateTime, nullable=False,)
+    expireTime = Column(DateTime, nullable=False, )
     isVerified = Column(Boolean, server_default='False')
     userId = Column(UUID(as_uuid=True),nullable=False)
     #type = Column(Enum(OtpType), nullable=False)

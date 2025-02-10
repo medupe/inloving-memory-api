@@ -13,7 +13,7 @@ class UserModel(Base):
     email = Column(String,nullable=False)
     city = Column(String,nullable=False)
     profile_pic_url =Column(String,nullable=True,default="https://www.gravatar.com/avatar/?d=identicon")
-    blocked = Column(Boolean, server_default='False',default=True)
+    blocked = Column(Boolean, server_default='False',default=False)
     password = Column(String,nullable=False)
     isVerified = Column(Boolean, server_default='False',default=False)
   

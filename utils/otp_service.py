@@ -1,4 +1,4 @@
-from datetime import datetime,timedelta
+from datetime import datetime,timedelta,timezone
 from typing import Annotated
 from fastapi.params import Depends
 import random
@@ -13,11 +13,12 @@ base_dir = os.path.dirname(os.path.abspath(__file__))  # Get current script dire
 file_path = os.path.join(base_dir, "email.html")  # Append the file name
        
 # Get current UTC time
-current_time = datetime.utcnow()
+utc_plus_2 = timezone(timedelta(hours=2))  # UTC+2 timezone
+current_time = datetime.now(utc_plus_2)
 
 # Add 15 minutes
 future_time = current_time + timedelta(minutes=15)
-class OtpService:
+class OtpService: 
     async def sendOtp(self,name, email ,subject,db:db_dependency ,userId):
             otp = random.randint(1000, 9999)
             otp_data = {
@@ -27,6 +28,7 @@ class OtpService:
                  "isVerified":False,
                  "userId" : userId
             }
+            print(otp_data)
            
             with open(file_path, "r", encoding="utf-8") as file:
                 html_content = file.read()
