@@ -1,10 +1,10 @@
 from fastapi import FastAPI,Depends,HTTPException,status
-from .models.user_model import UserModel
-from .database import engine,SessionLocal,Base
+
+from database import engine,SessionLocal,Base
 from pydantic import BaseModel
 from typing import Annotated
 from sqlalchemy.orm import Session
-from .routers import users
+from routers import users
 
 app = FastAPI()
 app.include_router(users.router)

@@ -4,7 +4,7 @@ from typing import Optional
 from uuid import UUID, uuid4
 from datetime import datetime
 
-from ..models.otp_model import OtpType
+from models.otp_model import OtpType
 
 class OtpSchema(BaseModel):
     id :UUID

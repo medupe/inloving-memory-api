@@ -2,7 +2,17 @@ from typing import Annotated
 from fastapi.params import Depends
 from mailersend import emails
 import os
-mailer = emails.NewEmail("mlsn.2478110123b42ae6c0abf1b8426e2feca11d204f5f24f9a81523f9689627939a")
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Access variables
+
+EMAIL_SERVICE_API_KEY = os.getenv("EMAIL_SERVICE_API_KEY")
+
+
+mailer = emails.NewEmail(EMAIL_SERVICE_API_KEY)
 class EmailService:
     async def sendEmail(self,name,email,subject,html_content):
        
@@ -28,4 +38,5 @@ class EmailService:
 
 def get_email_service():
     return EmailService()
+
 email_dependency = Annotated[EmailService,Depends(get_email_service)]
