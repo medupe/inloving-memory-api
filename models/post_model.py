@@ -18,4 +18,4 @@ class PostModel(Base):
     imgurl = Column(String,nullable=False)
     dateOfBirth = Column(DateTime, nullable=False, )
     dateOfDeath = Column(DateTime, nullable=False, )
-    creationDate = Column(DateTime, nullable=False, )
+    creationDate = Column(DateTime, nullable=False,default=datetime.utcnow )

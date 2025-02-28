@@ -1,14 +1,13 @@
-from fastapi import FastAPI,Depends,HTTPException,status
+from fastapi import FastAPI
 
-from database import engine,SessionLocal,Base
-from pydantic import BaseModel
-from typing import Annotated
-from sqlalchemy.orm import Session
-from routers import users,post
+from database import engine,Base
+
+from routers import users,post,image_router
 
 app = FastAPI()
 app.include_router(users.router)
 app.include_router(post.router)
+app.include_router(image_router.router)
 
 
 #Base.metadata.drop_all(bind=engine)

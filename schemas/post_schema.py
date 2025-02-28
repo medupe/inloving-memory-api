@@ -8,7 +8,7 @@ from models.otp_model import OtpType
 
 class PostSchema(BaseModel):
     userId: str
-    isEnabled:bool
+    #isEnabled:bool
     address:str
     city:str
     province:str
@@ -17,7 +17,4 @@ class PostSchema(BaseModel):
     imgurl:str
     dateOfBirth:datetime
     dateOfDeath:datetime
-    creationDate:datetime
-    class Config:
-        orm_mode = True  # Enables ORM serialization
-        from_attributes = True
+    #creationDate:datetime
