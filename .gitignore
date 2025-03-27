@@ -16,7 +16,7 @@ Pipfile.lock
 env3.*
 /env
 .env
-utils/storage-service-account.json
+utils/*.json
 docs_build
 site_build
 venv
