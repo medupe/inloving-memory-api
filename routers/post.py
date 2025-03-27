@@ -1,27 +1,38 @@
-from fastapi import APIRouter, FastAPI,Depends,HTTPException,status
+from fastapi import APIRouter,Form,File, FastAPI,Depends,HTTPException, UploadFile,status
 from datetime import datetime
-from models.otp_model import OtpType,OTPModel
 from models.post_model import PostModel
-from models.user_model import UserModel
 import models
 from schemas.post_schema import PostSchema
-
-from schemas.user_schema import UserBase,LoginBase,ForgotPasswordBase,ConfirmNewPasswordBase
-from schemas.otp_schema import OtpSchema,GetOtpSchema
 from database import db_dependency
-from utils.email_service import email_dependency
-from utils.otp_service import otp_dependency
-from passlib.context import CryptContext
+from utils.image_service import image_dependency
+
 
 router = APIRouter(tags=["Post"])
 
 @router.post("/post",status_code=status.HTTP_201_CREATED)
-async def create_post(post:PostSchema,db:db_dependency,):
-    db_post = models.post_model.PostModel(**post.dict())
-    db.add(db_post) 
-    db.commit()
-    db.refresh(db_post)
-    return {"message" : "Success"}
+async def create_post( db:db_dependency,image:image_dependency,          
+    file: UploadFile = File(...),  # File upload
+    userId: str = Form(...), 
+    postDescription: str = Form(...),
+    dateOfBirth: datetime = Form(...),
+    dateOfDeath: datetime = Form(...) ):
+        
+ 
+        imageId =await  image.upload_to_gcs(file,db,"post_photo",userId)
+        print(imageId)
+        postData = PostSchema(
+            userId=userId,
+            postDescription=postDescription,
+            imgId=str(imageId), 
+            dateOfBirth=dateOfBirth,
+            dateOfDeath=dateOfDeath
+        )
+
+        db_post = models.post_model.PostModel(**postData.dict())
+        db.add(db_post) 
+        db.commit()
+        db.refresh(db_post)
+        return {"message" : "Success"}  
 
 @router.get("/post",status_code=status.HTTP_201_CREATED)
 async def get_post(db:db_dependency,):
